@@ -30,45 +30,30 @@ def station():
     tbody = dr.find_element(By.TAG_NAME, "tbody")
     inner_timeline = tbody.find_elements(By.CLASS_NAME,"inner_timeline")
     for i in range(len(inner_timeline)):
-        str1 = ''
+        time_list = []
+        station_list = []
+        str_example = ''
         try:
             wrap_time = inner_timeline[i].find_element(By.CLASS_NAME,"wrap_time")
             wrap_station = inner_timeline[i].find_element(By.CLASS_NAME, "wrap_station")
             tm = wrap_time.find_element(By.CLASS_NAME,"time").text
             st = wrap_station.find_elements(By.TAG_NAME,"em")
-            str1 += tm + ' ' + st[0].text + '->' +  st[1].text
-            print(str1)
+            str_example += tm + ' ' + st[0].text + ' -> ' +  st[1].text
+            #time_list.append(tm)
+            #station_list.append([st[0].text,st[1].text])
+            print(str_example)
             print()
+            if station == '정왕역막차':
+                print("정왕역 막차 정보입니다!")
+                print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
+                print()
+            else:
+                print("수인선 오이도역 막차 정보입니다!")
+                print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
+                print()
         except NoSuchElementException as e:
-            str1 += ''
-            print(str1)
             print()
     dr.quit()
 
-
-    #     print("정왕역 막차 정보입니다!")
-    #     print("종 착 역  / 평 일 /  주말 및 공휴일")
-    #     print("당고개행 :", text_4_sta[5], text_4_sta[6])
-    #     print("사 당 행 :", text_4_sta[13], text_4_sta[14])
-    #     print("금 정 행 :", text_4_sta[17], text_4_sta[18])
-    #     print("오이도행 :", text_su_sta[11], text_su_sta[12])
-    #     print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
-    # elif station == '수인선오이도역막차' :
-    #     table_div = soup.find_all("tr", {"class" : "last"})
-    #     table_tr = table_div[1]
-
-    #     text_su_sta = []
-    #     for item in table_tr :
-    #         if item != " " :
-    #             text_su_sta += item
-
-    #     text_sta = []
-    #     for item in text_su_sta :
-    #         text_sta += item
-
-    #     print("오이도역(수인선) 막차 정보입니다!")
-    #     print("종 착 역  / 평 일 /  주말 및 공휴일")
-    #     print("인 천 행 :", text_sta[1], text_sta[2])
-    #     print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
 station()
 
