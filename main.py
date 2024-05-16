@@ -1,1 +1,3 @@
-import station
+import start
+
+start.start()
