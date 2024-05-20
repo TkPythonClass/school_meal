@@ -16,15 +16,13 @@ req = requests.get(f"https://ibook.kpu.ac.kr/Viewer/getBookXML/{bookcode}", head
 srcs = [req.json()[0]['src'], req.json()[1]['src']]
 path = os.path.dirname(os.path.abspath(__file__))
 
-for i in range(2):
-    file_path = f'{i}.jpg'
+for i in range(0, len(srcs)):
+        file_path = f'{i}.jpg'
 
     if os.path.exists(file_path):
         os.remove(file_path)
+    time.sleep(1)
 
-time.sleep(1)
-
-for i in range(0, len(srcs)):
     imgurl = "https:" + srcs[i]
     req = requests.get(imgurl, headers=headers)
     with open(os.path.join(path, f"{i}.jpg"), "wb") as f:
