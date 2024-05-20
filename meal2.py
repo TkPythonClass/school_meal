@@ -26,7 +26,6 @@ for i in range(0, len(srcs)):
     imgurl = "https:" + srcs[i]
     req = requests.get(imgurl, headers=headers)
     with open(os.path.join(path, f"{i}.jpg"), "wb") as f:
-        f.write(req.content)
-for i in range(2):
+        f.write(req.content)   
     img = Image.open(f'{i}.jpg')
-    img.show()       
+    img.show()     
