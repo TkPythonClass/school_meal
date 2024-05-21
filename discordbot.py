@@ -5,7 +5,6 @@ from discord.ext import commands
 import asyncio
 import os
 
-BOT_TOKEN = "MTI0MjAyMjI1MzU2NzQxNDM1Mg.GUBmZ6.ebfuOxvX8h5Ope01QsZmd7jjlIafHfz8j7X0co"
 
 intents = discord.Intents.default()
 intents.reactions = True
