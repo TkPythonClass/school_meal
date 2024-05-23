@@ -8,10 +8,7 @@ def func_text():
     print("학식 식단표 : 학식, ㅎㅅ")
     print("인근역 막차 : 막차, ㅁㅊ")
     #print("셔틀 시간표 : 셔틀, ㅅㅌ")
-    #print("정왕역 날씨 : 날씨, ㄴㅆ")
     #print("학사 공지 : 공지, ㄱㅈ")
-    #print("게임전적검색 : 게임, ㄱㅇ")
-    #print("ㄴ 현재 지원되는 게임 : 롤, 메이플, 배그")
     print("티노 끄기 : 티노, ㅌㄴ")
 
 # 산돌이 메인 함수
@@ -44,8 +41,6 @@ def start() :
         # elif '셔틀' in inp or 'ㅅㅌ' in inp:
         #     #셔틀은 이미 산돌이에 구현되어있어서 구현 x
         #     noFunc()
-        # elif '날씨' in inp or 'ㄴㅆ' in inp :
-        #     wheather.wheather()
         # elif '공지' in inp or 'ㄱㅈ' in inp :
         #     notice.notice()
         elif '티노' in inp or 'ㅌㄴ' in inp :
