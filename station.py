@@ -41,6 +41,7 @@ def station():
             str_example += tm + ' ' + st[0].text + ' -> ' +  st[1].text
             time_list.append(tm)
             station_list.append([st[0].text,st[1].text])
+
             if station == '정왕역막차':
                 print("정왕역 막차 정보입니다!")
                 print()
@@ -50,7 +51,8 @@ def station():
             print(str_example)
             print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
             print()
+
         except NoSuchElementException as e:
-            print()
+            error_code = e
     #print(time_list, ' ' , station_list)
     dr.quit()
