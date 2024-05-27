@@ -28,21 +28,25 @@ def station():
     now = datetime.now() 
     dr = webdriver.Chrome()
     dr.get(url)
-    time.sleep(3)
+    time.sleep(3.5)
     source = dr.page_source
     bs = BeautifulSoup(source, 'lxml')
     station_time = bs.find_all('strong',{'class' : 'time'})
     station_lines = bs.find_all('em', {'class':'station'})
     cnt = 0
+    cout_cnt = 0
     j = 0
     for tm in range(0,len(station_time)):
-        st_tm = station_time[tm].get_text()
-        if tm != 0 and tm%2 != 0:
+        st_tms = station_time[tm].get_text()
+        st_tm = [int(st_tms[0:2]), int(st_tms[3:5])]
+        if int(st_tms[0:2]) == 0:
+            st_tm[0] = 24
+        if station_lines[j].get_text() == '당고개' or station_lines[j].get_text() == '왕십리':
             j += 2
             continue 
-        elif int(st_tm[0:2]) < now.hour and int(st_tm[3:5]) < now.minute:
-            j += 2
-            continue
+        elif st_tm[0] < now.hour or st_tm[0] == now.hour and st_tm[1] < now.minute:
+                j += 2
+                continue
         else:
             if cnt == 2: 
                 break
@@ -50,7 +54,11 @@ def station():
                 print(station_time[tm].get_text())
                 print(station_lines[j].get_text(), ' -> ', station_lines[j+1].get_text())
                 j += 2
-                cnt += 1 
-    print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
+                cout_cnt += 1
+                cnt += 1
+    if not cout_cnt:
+        print('열차 운영이 끝났습니다.')
+    else:    
+        print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
     dr.quit()
 station()
