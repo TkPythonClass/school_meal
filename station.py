@@ -1,11 +1,13 @@
+
 import requests
 import time
 from selenium import webdriver
-from selenium.common.exceptions import NoSuchElementException 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
+from datetime import datetime
 
 def station():
     url = 'https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=0&ie=utf8&query='
@@ -23,34 +25,41 @@ def station():
         else :
             print("잘못 입력했어요. 다시 입력하세요.")
 
-    url += station 
+    url += station
+    now = datetime.now()
     dr = webdriver.Chrome()
     dr.get(url)
-    time.sleep(1)
-    tbody = dr.find_element(By.XPATH, "/html/body/div[3]/div[2]/div/div[1]/section[1]/div[2]/div/div[1]/div/div[5]/div[2]/div/div[3]/table/tbody")
-    inner_timeline = tbody.find_elements(By.CLASS_NAME,"inner_timeline")
-    time_list = []
-    station_list = []
-    for i in range(len(inner_timeline)):
-        str_example = ''
-        try:
-            wrap_time = inner_timeline[i].find_element(By.CLASS_NAME,"wrap_time")
-            wrap_station = inner_timeline[i].find_element(By.CLASS_NAME, "wrap_station")
-            tm = wrap_time.find_element(By.CLASS_NAME,"time").text
-            st = wrap_station.find_elements(By.TAG_NAME,"em")
-            str_example += tm + ' ' + st[0].text + ' -> ' +  st[1].text
-            time_list.append(tm)
-            station_list.append([st[0].text,st[1].text])
-            if station == '정왕역막차':
-                print("정왕역 막차 정보입니다!")
-                print()
+    time.sleep(3.5)
+    source = dr.page_source
+    bs = BeautifulSoup(source, 'lxml')
+    station_time = bs.find_all('strong',{'class' : 'time'})
+    station_lines = bs.find_all('em', {'class':'station'})
+    cnt = 0
+    cout_cnt = 0
+    j = 0
+    for tm in range(0,len(station_time)):
+        st_tms = station_time[tm].get_text()
+        st_tm = [int(st_tms[0:2]), int(st_tms[3:5])]
+        if int(st_tms[0:2]) == 0:
+            st_tm[0] = 24
+        if station_lines[j].get_text() == '당고개' or station_lines[j].get_text() == '왕십리':
+            j += 2
+            continue
+        elif st_tm[0] < now.hour or st_tm[0] == now.hour and st_tm[1] < now.minute:
+                j += 2
+                continue
+        else:
+            if cnt == 2:
+                break
             else:
-                print("수인선 오이도역 막차 정보입니다!")
-                print()
-            print(str_example)
-            print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
-            print()
-        except NoSuchElementException as e:
-            print()
-    #print(time_list, ' ' , station_list)
+                print(station_time[tm].get_text())
+                print(station_lines[j].get_text(), ' -> ', station_lines[j+1].get_text())
+                j += 2
+                cout_cnt += 1
+                cnt += 1
+    if not cout_cnt:
+        print('열차 운영이 끝났습니다.')
+    else:
+        print("본 정보는 네이버 검색 결과를 바탕으로 제공됩니다.")
     dr.quit()
+station()
