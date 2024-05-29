@@ -1,5 +1,5 @@
 import bs4_meal  # 학식 정보를 스크래핑하는 커스텀 모듈
-import station__  # 열차 시간 정보를 가져오는 커스텀 모듈
+import station  # 열차 시간 정보를 가져오는 커스텀 모듈
 import disnake  # 디스코드 봇을 만들기 위한 디스코드 API 래퍼
 from disnake.ext import commands  # 커맨드 프레임워크를 위한 확장 모듈
 from disnake import File  # 디스코드 파일 처리를 위한 모듈
@@ -16,12 +16,24 @@ async def on_ready():
 
 @bot.slash_command()
 async def 막차시간(inter, *, line):  # '막차시간'이라는 슬래시 커맨드를 정의하며 'line'이라는 파라미터를 받음
-    await inter.response.defer()  # 명령이 수신되었음을 확인하기 위해 응답을 지연시킴
+    await inter.response.defer()  # 열차시간 크롤링에 시간이 걸려 지연
     try:
-        embed = disnake.Embed(title="정왕역 막차", color=0x00ff00)  # 제목이 "정왕역 막차"인 임베드 메시지 생성
-        real_last_canival = station__.station(line)  # 'line'을 인자로 하여 station__ 모듈의 station 함수를 호출
+        line_color = 0x000000
+        line_name = ""
+
+        if line == "1":
+            line_color = 0x00A4E3
+            line_name = "4호선"
+
+        elif line == "2":
+            line_color = 0xFABE00
+            line_name = "수인분당선"
+
+        embed = disnake.Embed(title=f"{line_name} 정왕역 막차", color=line_color)  # 제목이 "정왕역 막차"인 임베드 메시지 생성
+        real_last_canival = station.station(line)  # 'line'을 인자로 하여 station__ 모듈의 station 함수를 호출
         for canival in real_last_canival:  # 결과를 반복
             embed.add_field(name="\u200b", value=str(canival), inline=False)  # 각 결과를 임베드 필드로 추가
+            embed.set_footer(text="본 정보는 네이버 검색 결과를 바탕으로 제공됩니다")    # 출처를 임베드 필드 아래로 추가
 
         await inter.edit_original_response(embed=embed)  # 원본 응답을 임베드 메시지로 수정
 
